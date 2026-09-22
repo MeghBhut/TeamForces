@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TeamForces</title>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("tf-theme");
+        if (t !== "light" && t !== "dark")
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=Hanken+Grotesk:wght@400;500&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="shell">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <h1 class="logo"><span class="brand-team">Team</span><span class="brand-forces">Forces</span></h1>
+      </div>
+      <nav id="tabs" class="tabs hidden">
+        <span class="nav-label">Menu</span>
+        <button class="tab" data-view="contest">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>
+          <span>Contest</span></button>
+        <button class="tab" data-view="upsolve">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="M6 12l6-6 6 6"/></svg>
+          <span>Upsolve</span></button>
+        <button class="tab" data-view="logs">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4.5 6h.01"/><path d="M4.5 12h.01"/><path d="M4.5 18h.01"/></svg>
+          <span>Logs</span></button>
+        <button class="tab" data-view="stats">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V11"/><path d="M12 21V4"/><path d="M19 21v-7"/></svg>
+          <span>Stats</span></button>
+        <button class="tab" data-view="rules">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h12a1 1 0 0 1 1 1v15H6a1 1 0 0 1-1-1z"/><path d="M5 4v16"/></svg>
+          <span>Rules</span></button>
+        <button class="tab" data-view="admin" id="adminTab">
+          <svg class="tico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>
+          <span>Admin</span></button>
+      </nav>
+      <div class="side-foot">
+        <div class="whoami"><span id="who">not logged in</span></div>
+        <div class="side-actions">
+          <button class="ghost small" id="themeToggle" title="Toggle light / dark" aria-label="Toggle theme">🌙</button>
+          <button class="ghost small hidden" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="content">
+    <main>
+
+    <section class="card" id="loginCard">
+      <h2>Sign in</h2>
+      <label for="li_user">Username</label>
+      <input id="li_user" autocomplete="username" />
+      <label for="li_pass">Password</label>
+      <input id="li_pass" type="password" autocomplete="current-password" />
+      <button id="loginBtn">Log in</button>
+      <div class="msg" id="loginMsg"></div>
+    </section>
+
+    <section class="view hidden" id="view-contest">
+      <div class="card" id="archiveCard">
+        <h2>Contests</h2>
+        <p class="hint">Click a round to open it. The live round is highlighted.</p>
+        <div id="contestArchive" class="archive"></div>
+      </div>
+
+      <button class="backbtn hidden" id="backToList">← All contests</button>
+
+      <div class="card hidden" id="contestHeader">
+        <div class="contest-top">
+          <h2 id="contestTitle">Contest</h2>
+          <div class="timer" id="timer"></div>
+        </div>
+        <div id="contestBody"></div>
+        <div id="adminControls" class="controls hidden"></div>
+        <div class="msg" id="controlMsg"></div>
+      </div>
+
+      <div class="card hidden" id="problemsCard">
+        <h2>Problems</h2>
+        <p class="hint">Problems open in a new tab on Codeforces. Solve there —
+          your submissions are tracked automatically.</p>
+        <ol id="problemList" class="problems"></ol>
+      </div>
+
+      <div class="card hidden" id="resultsCard">
+        <h2>Results</h2>
+        <p class="hint">Members are listed alphabetically. A cell shows the solve
+          time in minutes and, in red, wrong attempts. This is not a leaderboard.</p>
+        <div class="table-wrap"><table id="resultsTable"></table></div>
+        <p class="legend">✓ elapsed′ = time into the contest · (effort′) = time actually
+          spent on that problem · <span class="wrong">−N</span> wrong attempts ·
+          ↑ upsolved after the contest · – untouched</p>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-upsolve">
+      <div class="card">
+        <h2>My upsolve queue</h2>
+        <p class="hint">Problems you didn't finish in a contest. Solve them on
+          Codeforces and they'll be marked done automatically (this is private —
+          only you see your queue).</p>
+        <div id="upsolveBody"></div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-logs">
+      <div class="card">
+        <h2>My logs to write</h2>
+        <p class="hint">Problems from finished contests you haven't logged yet.
+          Add a quick note, or mark <b>no log</b> to dismiss it.</p>
+        <div id="pendingList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Members</h2>
+        <p class="hint">Click a member to open their profile and read the mistake
+          logs they've shared.</p>
+        <div id="membersGrid" class="members-grid"></div>
+      </div>
+
+      <div class="card hidden" id="memberProfileCard">
+        <div class="contest-top">
+          <h2 id="memberProfileName"></h2>
+          <button class="ghost small" id="closeProfileBtn">close</button>
+        </div>
+        <div id="memberLogList"></div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-stats">
+      <div class="card">
+        <h2>My stats <span class="badge">private</span></h2>
+        <p class="hint">Only you can see this. Per rating band: how many you
+          attempted and solved, your accuracy, and two solve-time measures —
+          <b>avg elapsed</b> (minutes into the contest) and <b>avg effort</b>
+          (minutes actually spent on the problem, not counting time on others).</p>
+        <div class="table-wrap"><table id="bandsTable"></table></div>
+        <h3 class="sub">Accuracy by rating</h3>
+        <canvas id="accChart" width="640" height="200"></canvas>
+        <h3 class="sub">Solved per contest (over time)</h3>
+        <canvas id="timeChart" width="640" height="200"></canvas>
+      </div>
+
+      <div class="card">
+        <h2>My bookmarks <span class="badge">private</span></h2>
+        <p class="hint">Star problems from the Contest tab to keep them here.</p>
+        <div id="bookmarkList"></div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-rules">
+      <div class="card" id="rulesCard">
+        <p class="hint">Loading rules…</p>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-admin">
+      <div class="card">
+        <h2>Create a contest</h2>
+        <p class="hint">Enter one rating per problem (comma-separated). The server
+          picks a random problem for each rating, skipping anything any member has
+          already solved. You won't see the chosen problems until you start it.</p>
+        <label for="cc_ratings">Ratings</label>
+        <input id="cc_ratings" placeholder="800, 900, 1000, 1000, 1200" />
+        <label for="cc_duration">Duration (minutes)</label>
+        <input id="cc_duration" type="number" value="120" />
+        <label for="cc_schedule">Schedule start (optional)</label>
+        <input id="cc_schedule" type="datetime-local" />
+        <p class="hint">Leave the schedule empty to start it yourself with a button.
+          Set a time and it opens automatically then.</p>
+        <button id="createBtn">Create contest</button>
+        <div class="msg" id="createMsg"></div>
+        <div id="draftBox" class="hidden">
+          <p id="draftInfo"></p>
+          <button id="startBtn">Start now (reveal to everyone)</button>
+          <div class="msg" id="startMsg"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Register a person</h2>
+        <p class="hint">Create the account, then email the person their username
+          &amp; password. Their CF handle lets the poller track their solves.</p>
+        <label for="rg_user">Username</label>
+        <input id="rg_user" />
+        <label for="rg_pass">Password</label>
+        <input id="rg_pass" />
+        <label for="rg_handle">Codeforces handle</label>
+        <input id="rg_handle" />
+        <label for="rg_role">Role</label>
+        <select id="rg_role">
+          <option value="member">member</option>
+          <option value="admin">admin</option>
+        </select>
+        <button id="registerBtn">Create account</button>
+        <div class="msg" id="registerMsg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Problemset cache</h2>
+        <p class="hint">Refresh the cached Codeforces problemset used to pick
+          contest problems.</p>
+        <button class="ghost" id="refreshBtn">Refresh problemset cache</button>
+        <div class="msg" id="refreshMsg"></div>
+      </div>
+    </section>
+    </main>
+    </div>
+  </div>
+
+  <div id="modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" title="close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

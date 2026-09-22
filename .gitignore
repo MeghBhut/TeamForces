@@ -1,0 +1,18 @@
+# Claude Code local config
+.claude/
+
+# ---- Private data — NEVER commit ----
+# (password hashes + salts, session tokens, contest results, mistake logs,
+#  bookmarks, log-skips, and the CF problemset cache)
+/data/
+
+# ---- Runtime logs & pid files ----
+*.log
+/ops/logs/
+/ops/run/
+
+# ---- Build artifacts ----
+/teamforces_test.exe
+/teamforces_new.exe
+/build/
+*.o

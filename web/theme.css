@@ -1,0 +1,69 @@
+:root {
+
+  --bg:#D7E0E2; --surface:#E6EDEE; --surface-2:#CDD9DB; --line:#B2C3C6;
+  --ink:#16262B; --ink-dim:#55696D;
+  --cyan:#0A8FA5; --cyan-glow:#0FA6BE; --blue:#2C5FA8; --warn:#C6413B;
+  --term-bg:#1C2F35; --term-txt:#D2E1E3; --term-line:#33484F;
+  --term-cyan:#3AD0E0; --term-mut:#718A90;
+
+  --ac:#1f7a50; --wa:#C6413B; --tle:#B9791F;
+
+  --font-head: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --on-accent:#0C1719;
+  --scrim: rgba(22, 38, 43, 0.45);
+  --shadow-sm: 0 1px 2px rgba(22, 38, 43, 0.08);
+  --shadow-md: 0 10px 30px -10px rgba(22, 38, 43, 0.16);
+  --header-bg: rgba(230, 237, 238, 0.82);
+
+  --bg-primary:     var(--bg);
+  --bg-secondary:   var(--surface);
+  --bg-elevated:    var(--surface-2);
+  --text-primary:   var(--ink);
+  --text-secondary: var(--ink-dim);
+  --border:         var(--line);
+  --accent:         var(--cyan);
+  --accent-hover:   var(--cyan-glow);
+  --accent-2:       var(--cyan-glow);
+  --success:        var(--ac);
+  --error:          var(--wa);
+  --panel:          var(--surface);
+  --panel-2:        var(--surface-2);
+  --text:           var(--ink);
+  --muted:          var(--ink-dim);
+  --ok:             var(--ac);
+  --bad:            var(--wa);
+}
+
+:root[data-theme="dark"] {
+
+  --bg:#101E20; --surface:#17282A; --surface-2:#1E3033; --line:#2C4145;
+  --ink:#D3E0E1; --ink-dim:#7F9498;
+  --cyan:#35C6DC; --cyan-glow:#4FD8EC; --blue:#6FA0DC; --warn:#E8726C;
+  --term-bg:#0C1719; --term-txt:#C8DADB; --term-line:#263A3D;
+  --term-cyan:#4FE0F0; --term-mut:#6E888C;
+  --ac:#4fd0a0; --wa:#E8726C; --tle:#E0A85A;
+
+  --on-accent:#0C1719;
+  --scrim: rgba(6, 12, 13, 0.60);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-md: 0 12px 34px -12px rgba(0, 0, 0, 0.60);
+  --header-bg: rgba(23, 40, 42, 0.82);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg:#101E20; --surface:#17282A; --surface-2:#1E3033; --line:#2C4145;
+    --ink:#D3E0E1; --ink-dim:#7F9498;
+    --cyan:#35C6DC; --cyan-glow:#4FD8EC; --blue:#6FA0DC; --warn:#E8726C;
+    --term-bg:#0C1719; --term-txt:#C8DADB; --term-line:#263A3D;
+    --term-cyan:#4FE0F0; --term-mut:#6E888C;
+    --ac:#4fd0a0; --wa:#E8726C; --tle:#E0A85A;
+    --on-accent:#0C1719; --scrim: rgba(6, 12, 13, 0.60);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40);
+    --shadow-md: 0 12px 34px -12px rgba(0, 0, 0, 0.60);
+    --header-bg: rgba(23, 40, 42, 0.82);
+  }
+}
